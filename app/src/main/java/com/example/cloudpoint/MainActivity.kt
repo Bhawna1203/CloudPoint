@@ -1,6 +1,9 @@
 package com.example.cloudpoint
 
+import android.app.Dialog
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,49 +13,103 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.example.cloudpoint.databinding.ActivityMainBinding
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
+import java.net.URL
+import java.sql.Connection
+import javax.net.ssl.HttpsURLConnection
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+        override fun onCreate(savedInstanceState: Bundle?){
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        private inner class CallAPILoginAsyncTask(): AsyncTask<Any, Void, String>(){
+
+            private lateinit var customProgressDialog: Dialog
+
+            override fun onPreExecute() {
+                super.onPreExecute()
+                showProgressDialog()
+                CallAPILoginAsyncTask().execute()
+            }
+            override fun doInBackground(vararg p0: Any?): String {
+                var result: String
+                var connection: HttpURLConnection ?= null
+
+                try{
+                    val url = URL("https://run.mocky.io/v3/223c5dfc-9639-48d2-b37f-2ce1dbe077b3")
+                    connection = url.openConnection() as HttpURLConnection
+                    connection.doInput = true
+                    connection.doOutput = true
+
+                    val httpsResult : Int = connection.responseCode
+                    if(httpsResult == HttpsURLConnection.HTTP_OK){
+                        val inputStream = connection.inputStream
+                        val reader = BufferedReader(
+                            InputStreamReader(inputStream)
+                        )
+                        val stringBuilder = StringBuilder()
+                        var line : String?
+                        try{
+                            while(reader.readLine().also{line = it} != null){
+                                stringBuilder.append(line + "\n")
+                            }
+                        }catch (e: IOException){
+                            e.printStackTrace()
+                        }finally {
+                            try{
+                                inputStream.close()
+                            }catch (e:IOException){
+                                e.printStackTrace()
+                            }
+                        }
+                        result = stringBuilder.toString()
+                    }else{
+                        result = connection.responseMessage
+                    }
+                }catch (e: SocketTimeoutException){
+                    result = "Connection timeout"
+                }catch(e:Exception){
+                    result = "Error : " + e.message
+                }finally {
+                    connection?.disconnect()
+                }
+                return result
+            }
+
+            override fun onPostExecute(result: String?) {
+                super.onPostExecute(result)
+                cancelProgressDialog()
+                Log.i("JSON RESPONSE RESULT", result.toString())
+            }
+            private fun showProgressDialog(){
+                customProgressDialog = Dialog(this@MainActivity)
+                customProgressDialog.setContentView(R.layout.dialog_custom_progress)
+                customProgressDialog.show()
+            }
+
+            private fun cancelProgressDialog(){
+                customProgressDialog.dismiss()
+            }
+
         }
-    }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
+
+
+
+
+
+
+
+
+
 }

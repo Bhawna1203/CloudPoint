@@ -25,6 +25,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.cloudpoint.databinding.ActivityMainBinding
+import com.example.cloudpoint.models.weatherResponse
+import com.example.cloudpoint.network.WeatherService
 import com.example.cloudpoint.utils.Constants
 import com.google.android.gms.location.*
 import com.karumi.dexter.Dexter
@@ -32,6 +34,9 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import retrofit2.Call
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -108,18 +113,61 @@ class MainActivity : AppCompatActivity() {
          )
      }
 
-    private fun getLocationWeatherDetails(){
+    private fun getLocationWeatherDetails(latitude: Double, longitude: Double){
 
         // TODO (Here we will check whether the internet
-        //  connection is available or not using the method which
-        //  we have created in the Constants object.)
         if (Constants.isNetworkAvailable(this@MainActivity)) {
 
-            Toast.makeText(
-                this@MainActivity,
-                "You have connected to the internet. Now you can make an api call.",
-                Toast.LENGTH_SHORT
-            ).show()
+            // TODO (Make an api call using retrofit.)
+            val retrofit: Retrofit = Retrofit.Builder()
+                // API base URL.
+                .baseUrl(Constants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            // TODO (Further step for API call)
+            val service: WeatherService =
+                retrofit.create<WeatherService>(WeatherService::class.java)
+
+            val listCall: Call<weatherResponse> = service.getWeather(
+                latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
+            )
+
+            // Callback methods are executed using the Retrofit callback executor.
+            listCall.enqueue(object : Callback<weatherResponse> {
+                @SuppressLint("SetTextI18n")
+                override fun onResponse(call: Call<weatherResponse>,response: Response<weatherResponse>) {
+                    // Check weather the response is success or not.
+                    if (response.isSuccessful) {
+                        /** The de-serialized response body of a successful response. */
+                        val weatherList: weatherResponse? = response.body()
+                        Log.i("Response Result", "$weatherList")
+                    } else {
+                        // If the response is not success then we check the response code.
+                        val sc = response.code()
+                        when (sc) {
+                            400 -> {
+                                Log.e("Error 400", "Bad Request")
+                            }
+                            404 -> {
+                                Log.e("Error 404", "Not Found")
+                            }
+                            else -> {
+                                Log.e("Error", "Generic Error")
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<weatherResponse>, t: Throwable) {
+                    Log.e("Errorrrrr", t.message.toString())
+                }
+
+            })
+
+
+
+
         } else {
             Toast.makeText(
                 this@MainActivity,
@@ -176,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 
             val longitude = mLastLocation.longitude
             Log.i("Current Longitude", "$longitude")
-            getLocationWeatherDetails()
+            getLocationWeatherDetails(latitude, longitude)
         }
     }
 

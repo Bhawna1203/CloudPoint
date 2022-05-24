@@ -7,6 +7,10 @@ import android.os.Build
 
 object Constants {
 
+    const val APP_ID:String = "19ad451072b482fb66a83b1028607b33"
+    const val BASE_URL: String= "https://api.openweathermap.org/data/"
+    const val METRIC_UNIT : String = "metric"
+
     // TODO (Add a function to check the network connection is available or not.)
     fun isNetworkAvailable(context: Context): Boolean {
         // It answers the queries about the state of network connectivity.

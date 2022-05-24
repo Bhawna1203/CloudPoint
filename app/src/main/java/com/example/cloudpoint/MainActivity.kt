@@ -25,6 +25,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.cloudpoint.databinding.ActivityMainBinding
+import com.example.cloudpoint.utils.Constants
 import com.google.android.gms.location.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -106,6 +107,30 @@ class MainActivity : AppCompatActivity() {
 
          )
      }
+
+    private fun getLocationWeatherDetails(){
+
+        // TODO (Here we will check whether the internet
+        //  connection is available or not using the method which
+        //  we have created in the Constants object.)
+        if (Constants.isNetworkAvailable(this@MainActivity)) {
+
+            Toast.makeText(
+                this@MainActivity,
+                "You have connected to the internet. Now you can make an api call.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                this@MainActivity,
+                "No internet connection available.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }
+
+
     private fun showRationalDialogForPermissions() {
         AlertDialog.Builder(this)
             .setMessage("It Looks like you have turned off permissions required for this feature. " +
@@ -151,6 +176,7 @@ class MainActivity : AppCompatActivity() {
 
             val longitude = mLastLocation.longitude
             Log.i("Current Longitude", "$longitude")
+            getLocationWeatherDetails()
         }
     }
 

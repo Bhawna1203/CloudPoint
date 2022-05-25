@@ -7,10 +7,12 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -23,7 +25,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.cloudpoint.databinding.ActivityMainBinding
 import com.example.cloudpoint.models.weatherResponse
 import com.example.cloudpoint.network.WeatherService
@@ -34,6 +38,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,8 +50,8 @@ import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.URL
 import java.sql.Connection
+import java.util.*
 import javax.net.ssl.HttpsURLConnection
-import android.location.LocationRequest as LocationRequest1
 
 class MainActivity : AppCompatActivity() {
 
@@ -106,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         }
      private fun isLocationEnabled(): Boolean{
          val locationManager: LocationManager =
-             getSystemService(Context.LOCATION_SERVICE) as LocationManager
+             getSystemService(LOCATION_SERVICE) as LocationManager
          return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                  || locationManager.isProviderEnabled(
              LocationManager.NETWORK_PROVIDER
@@ -114,8 +119,7 @@ class MainActivity : AppCompatActivity() {
          )
      }
 
-    private fun getLocationWeatherDetails(latitude: Double, longitude: Double){
-
+    private fun getLocationWeatherDetails(latitude: Double, longitude: Double) =
         // TODO (Here we will check whether the internet
         if (Constants.isNetworkAvailable(this@MainActivity)) {
 
@@ -137,13 +141,17 @@ class MainActivity : AppCompatActivity() {
             showCustomProgressDialog()
             // Callback methods are executed using the Retrofit callback executor.
             listCall.enqueue(object : Callback<weatherResponse> {
-                @SuppressLint("SetTextI18n")
-                override fun onResponse(call: Call<weatherResponse>,response: Response<weatherResponse>) {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onResponse(call: Call<weatherResponse>, response: Response<weatherResponse>) {
                     // Check weather the response is success or not.
                     if (response.isSuccessful) {
                         hideProgressDialog()
                         /** The de-serialized response body of a successful response. */
+                        /** The de-serialized response body of a successful response. */
                         val weatherList: weatherResponse? = response.body()
+                        if (weatherList != null) {
+                            setupUI(weatherList)
+                        }
                         Log.i("Response Result", "$weatherList")
                     } else {
                         // If the response is not success then we check the response code.
@@ -179,8 +187,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-
-    }
 
     /**
      * Method is used to show the Custom Progress Dialog.
@@ -247,5 +253,60 @@ class MainActivity : AppCompatActivity() {
             getLocationWeatherDetails(latitude, longitude)
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("SetTextI18n")
+    private fun setupUI(weatherList: weatherResponse){
+        for(i in weatherList.weather.indices){
+            Log.i("Weather Name", weatherList.weather.toString())
+
+            tv_main.text = weatherList.weather[i].main
+            tv_main_description.text = weatherList.weather[i].description
+            tv_temp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.locales.toString())
+            tv_humidity.text = weatherList.main.humidity.toString() + " per cent"
+            /*
+            tv_min.text = weatherList.main.tempMin.toString() + " min"
+            tv_max.text = weatherList.main.tempMax.toString() + " max"
+            tv_speed.text = weatherList.wind.speed.toString()
+            tv_name.text = weatherList.name
+            tv_country.text = weatherList.sys.country
+            tv_sunrise_time.text = unixTime(weatherList.sys.sunrise.toLong())
+            tv_sunset_time.text = unixTime(weatherList.sys.sunset.toLong())
+            */
+
+
+            // Here we update the main icon
+            when (weatherList.weather[i].icon) {
+                "01d" -> iv_main.setImageResource(R.drawable.sunny)
+                "02d" -> iv_main.setImageResource(R.drawable.cloud)
+                "03d" -> iv_main.setImageResource(R.drawable.cloud)
+                "04d" -> iv_main.setImageResource(R.drawable.cloud)
+                "04n" -> iv_main.setImageResource(R.drawable.cloud)
+                "10d" -> iv_main.setImageResource(R.drawable.rain)
+                "11d" -> iv_main.setImageResource(R.drawable.storm)
+                "13d" -> iv_main.setImageResource(R.drawable.snowflake)
+                "01n" -> iv_main.setImageResource(R.drawable.cloud)
+                "02n" -> iv_main.setImageResource(R.drawable.cloud)
+                "03n" -> iv_main.setImageResource(R.drawable.cloud)
+                "10n" -> iv_main.setImageResource(R.drawable.cloud)
+                "11n" -> iv_main.setImageResource(R.drawable.rain)
+                "13n" -> iv_main.setImageResource(R.drawable.snowflake)
+            }
+
+        }
+    }
+
+    /**
+     * Function is used to get the temperature unit value.
+     */
+    private fun getUnit(value: String): String? {
+        Log.i("unitttttt", value)
+        var value = "°C"
+        if ("US" == value || "LR" == value || "MM" == value) {
+            value = "°F"
+        }
+        return value
+    }
+
 
 }

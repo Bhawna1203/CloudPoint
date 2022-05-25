@@ -3,6 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/close.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/cloud.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/evening.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/humidity.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/location.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/morning.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/rain.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/snowflake.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/storm.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/sunny.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/sunrise.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/sunset.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/temperature.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/wind.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/dialog_custom_progress.xml" value="0.25" />
       </map>
@@ -13,5 +29,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="SuppressABINotification">
+    <option name="modulesWithSuppressedNotConfigured">
+      <set>
+        <option value="CloudPoint.app" />
+      </set>
+    </option>
   </component>
 </project>

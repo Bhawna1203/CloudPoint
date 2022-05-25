@@ -9,4 +9,7 @@
 
     <string name="please_wait">Please Wait…</string>
 
+    <string name="image_contentDescription">image</string>
+    <string name="miles_per_hour">miles/hour</string>
+
 </resources>

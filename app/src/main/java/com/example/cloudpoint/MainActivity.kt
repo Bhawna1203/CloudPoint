@@ -51,6 +51,7 @@ import android.location.LocationRequest as LocationRequest1
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var mProgressDialog: Dialog ?= null
 
 
         override fun onCreate(savedInstanceState: Bundle?){
@@ -133,12 +134,14 @@ class MainActivity : AppCompatActivity() {
                 latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
             )
 
+            showCustomProgressDialog()
             // Callback methods are executed using the Retrofit callback executor.
             listCall.enqueue(object : Callback<weatherResponse> {
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call<weatherResponse>,response: Response<weatherResponse>) {
                     // Check weather the response is success or not.
                     if (response.isSuccessful) {
+                        hideProgressDialog()
                         /** The de-serialized response body of a successful response. */
                         val weatherList: weatherResponse? = response.body()
                         Log.i("Response Result", "$weatherList")
@@ -161,6 +164,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<weatherResponse>, t: Throwable) {
                     Log.e("Errorrrrr", t.message.toString())
+                    hideProgressDialog()
                 }
 
             })
@@ -178,6 +182,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(this)
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+        mProgressDialog!!.show()
+    }
+    /**
+     * This function is used to dismiss the progress dialog if it is visible to user.
+     */
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
+    }
 
     private fun showRationalDialogForPermissions() {
         AlertDialog.Builder(this)

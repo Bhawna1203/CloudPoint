@@ -267,14 +267,12 @@ class MainActivity : AppCompatActivity() {
             tv_temp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.locales.toString())
             tv_humidity.text = weatherList.main.humidity.toString() + " per cent"
 
-            /*
-            tv_min.text = weatherList.main.tempMin.toString() + " min"
-            tv_max.text = weatherList.main.tempMax.toString() + " max"
+
+            tv_min.text = weatherList.main.temp_min.toString() + " min"
+            tv_max.text = weatherList.main.temp_max.toString() + " max"
             tv_speed.text = weatherList.wind.speed.toString()
             tv_name.text = weatherList.name
             tv_country.text = weatherList.sys.country
-            
-             */
 
             //Sunset and sunrise time
             tv_sunrise_time.text = unixTime(weatherList.sys.sunrise.toLong())

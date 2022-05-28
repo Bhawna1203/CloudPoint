@@ -42,7 +42,9 @@ git remote add upstream https://github.com/Bhawna1203/CloudPoint.git
   
   
   
-<h2> 🌻 UI of the App </h>
+<h2> 🌻 UI of the App </h><br>
+<img src="https://github.com/Bhawna1203/CloudPoint/blob/main/main.gif" align="middle" width="30%"/>
+
   
 
 <h2> :fire: Problem i faced</h2>

@@ -52,5 +52,32 @@ git remote add upstream https://github.com/Bhawna1203/CloudPoint.git
 
 
  </p> 
+ 
+ ## :heartpulse: Find this repository useful?
+Support it by joining [App Link](https://github.com/Bhawna1203/CloudPoint.App) for this repository. ⭐
+And [follow](https://github.com/Bhawna1203) me for my next creations! 🤩
+
+## :dizzy: License
+```xml
+Designed and developed by 2022 Bhawna1203 (Bhawna chauhan)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+<h4 align= "centre">If you are facing any issue then free to contact me through email</h2>
+
+- 📫Email : bhawnabc2002@gmail.com
+
+
   
   

@@ -19,8 +19,9 @@
         <entry key="app/src/main/res/drawable/sunset.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/temperature.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/wind.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/dialog_custom_progress.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.33" />
       </map>
     </option>
   </component>

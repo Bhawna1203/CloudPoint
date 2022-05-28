@@ -65,6 +65,10 @@ class MainActivity : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
+        //    setSupportActionBar(toolbar_fav_place)
+            
+
+
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
             if(!isLocationEnabled()){
@@ -110,7 +114,31 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
+            // TODO Now add the override methods to load the menu file and perform the selection on item click.)
+
+            fun onCreateOptionsMenu(menu: Menu?): Boolean {
+                menuInflater.inflate(R.menu.menu_main,menu)
+                return super.onCreateOptionsMenu(menu)
+            }
+
+            fun onOptionsItemSelected(item: MenuItem): Boolean {
+                return when(item.itemId){
+                    R.id.action_refresh -> {
+                        requestLocationData()
+                        true
+                    }else -> return super.onOptionsItemSelected(item)
+                }
+
+            }
+
+
         }
+
+
+
+    /**
+     * A function which is used to verify that the location or GPS is enable or not of the user's device.
+     */
      private fun isLocationEnabled(): Boolean{
          val locationManager: LocationManager =
              getSystemService(LOCATION_SERVICE) as LocationManager
@@ -120,6 +148,10 @@ class MainActivity : AppCompatActivity() {
 
          )
      }
+
+    /**
+     * A function used to show the alert dialog when the permissions are denied and need to allow it from settings app info.
+     */
 
     private fun getLocationWeatherDetails(latitude: Double, longitude: Double) =
         // TODO (Here we will check whether the internet

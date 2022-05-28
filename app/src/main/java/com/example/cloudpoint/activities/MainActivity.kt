@@ -1,4 +1,4 @@
-package com.example.cloudpoint
+package com.example.cloudpoint.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -23,6 +23,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.example.cloudpoint.R
 import com.example.cloudpoint.models.weatherResponse
 import com.example.cloudpoint.network.WeatherService
 import com.example.cloudpoint.utils.Constants

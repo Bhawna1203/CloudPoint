@@ -8,6 +8,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -51,6 +52,7 @@ import java.net.SocketTimeoutException
 import java.net.URL
 import java.sql.Connection
 import java.util.*
+import java.util.TimeZone.*
 import javax.net.ssl.HttpsURLConnection
 
 class MainActivity : AppCompatActivity() {
@@ -264,15 +266,19 @@ class MainActivity : AppCompatActivity() {
             tv_main_description.text = weatherList.weather[i].description
             tv_temp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.locales.toString())
             tv_humidity.text = weatherList.main.humidity.toString() + " per cent"
+
             /*
             tv_min.text = weatherList.main.tempMin.toString() + " min"
             tv_max.text = weatherList.main.tempMax.toString() + " max"
             tv_speed.text = weatherList.wind.speed.toString()
             tv_name.text = weatherList.name
             tv_country.text = weatherList.sys.country
+            
+             */
+
+            //Sunset and sunrise time
             tv_sunrise_time.text = unixTime(weatherList.sys.sunrise.toLong())
             tv_sunset_time.text = unixTime(weatherList.sys.sunset.toLong())
-            */
 
 
             // Here we update the main icon
@@ -306,6 +312,22 @@ class MainActivity : AppCompatActivity() {
             value = "°F"
         }
         return value
+    }
+
+    /**
+     * The function is used to get the formatted time
+     * based on the Format and the LOCALE we pass to it.
+     */
+    private fun unixTime(timex: Long): String? {
+        val date = Date(timex * 1000L)
+        @SuppressLint("SimpleDateFormat") val sdf =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                SimpleDateFormat("HH:mm",Locale.UK)
+            } else {
+                TODO("VERSION.SDK_INT < N")
+            }
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(date)
     }
 
 
